@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAA TARA GARAGE - ERP</title>
+    <title>MAA TARA GARAGE - ERP PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: linear-gradient(rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.92)), 
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), 
                         url('https://images.unsplash.com/photo-1486006396113-c7b349741f15?q=80&w=2000&auto=format&fit=crop');
             background-size: cover; background-attachment: fixed; color: white; font-family: sans-serif; min-height: 100vh;
         }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; }
-        input, select { background: #1e293b; color: white; border: 1px solid #475569; padding: 12px; border-radius: 10px; width: 100%; text-transform: uppercase; outline: none; }
+        input, select { background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 10px; width: 100%; text-transform: uppercase; outline: none; }
+        input:focus { border-color: #fbbf24; }
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; color: black !important; padding: 0; }
             #printArea { display: block !important; visibility: visible !important; }
-            .print-page { border: 2px solid black; padding: 30px; margin: 10px; page-break-after: always; color: black !important; position: relative; min-height: 95vh; }
+            .print-page { border: 2px solid black; padding: 30px; margin: 10px; page-break-after: always; color: black !important; min-height: 95vh; }
             table { width: 100%; border-collapse: collapse; margin-top: 15px; }
             th, td { border: 1px solid black !important; padding: 10px; text-align: left; }
-            .terms-box { border-top: 1px dashed black; margin-top: 20px; padding-top: 10px; font-size: 11px; line-height: 1.4; }
-            .thank-you-note { text-align: center; margin-top: 30px; font-style: italic; font-weight: bold; color: #1e293b !important; border: 1px solid #ddd; padding: 10px; border-radius: 8px; }
+            .terms-box { border-top: 1px dashed black; margin-top: 20px; padding-top: 10px; font-size: 11px; }
+            .thank-you { text-align: center; font-style: italic; margin-top: 20px; font-weight: bold; }
         }
     </style>
 </head>
@@ -29,10 +30,9 @@
 
     <div id="loginSection" class="flex flex-col items-center justify-center h-[85vh] no-print">
         <div class="glass-card p-10 w-full max-w-sm text-center border-t-8 border-yellow-500 shadow-2xl">
-            <h1 class="text-4xl font-black text-yellow-500 mb-2 italic tracking-tighter">MAA TARA</h1>
-            <p class="text-gray-400 text-xs mb-8 font-bold tracking-widest uppercase">Garage Management</p>
-            <input type="password" id="passInput" placeholder="ENTER PASSWORD" class="mb-6 text-center text-xl font-bold border-yellow-500/30">
-            <button onclick="doLogin()" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-5 rounded-2xl shadow-lg transition-all transform active:scale-95">LOGIN TO SYSTEM</button>
+            <h1 class="text-4xl font-black text-yellow-500 mb-2 italic">MAA TARA</h1>
+            <input type="password" id="passInput" placeholder="ENTER PASSWORD" class="mb-6 text-center text-xl font-bold">
+            <button onclick="doLogin()" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl">LOGIN</button>
         </div>
     </div>
 
@@ -40,90 +40,94 @@
         <header class="glass-card p-6 mb-8 flex flex-wrap justify-between items-center border-b-4 border-yellow-500">
             <div>
                 <h1 class="text-4xl font-black text-yellow-500 tracking-tighter">MAA TARA GARAGE</h1>
-                <p class="text-sm font-bold text-gray-300 uppercase">Transport Nagar, Raipur (C.G.)</p>
+                <p class="text-sm font-bold text-gray-300">TRANSPORT NAGAR, RAIPUR (C.G.)</p>
             </div>
             <div class="flex gap-4 mt-4 lg:mt-0">
-                <select id="docType" class="w-48 border-yellow-500 text-yellow-500 font-bold bg-slate-900 rounded-xl">
-                    <option value="FINAL BILL">FINAL BILL</option>
-                    <option value="QUOTATION">QUOTATION</option>
-                </select>
-                <button onclick="doLogout()" class="bg-red-600 px-6 py-2 rounded-xl font-bold hover:bg-red-700 shadow-lg">LOGOUT</button>
+                <button onclick="toggleHistory()" class="bg-indigo-600 px-6 py-2 rounded-xl font-bold hover:bg-indigo-500 transition-all">📜 VIEW HISTORY</button>
+                <button onclick="doLogout()" class="bg-red-600 px-6 py-2 rounded-xl font-bold">LOGOUT</button>
             </div>
         </header>
 
-        <div class="glass-card p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 shadow-2xl">
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Vehicle No</label><input type="text" id="vNo" placeholder="CG 04 XXXX"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Name</label><input type="text" id="oName" placeholder="ENTER NAME"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Phone</label><input type="text" id="oPhone" placeholder="MOBILE NO"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Date</label><input type="date" id="vDate"></div>
-            <div class="space-y-1">
-                <label class="text-xs font-bold text-yellow-500 uppercase">Wheels</label>
-                <select id="vWheels">
-                    <option>6 CHAKKA</option><option>10 CHAKKA</option><option>12 CHAKKA</option>
-                    <option>14 CHAKKA</option><option>16 CHAKKA</option><option>18 CHAKKA</option><option>22 CHAKKA</option>
-                </select>
+        <div id="historySection" class="hidden glass-card p-8 mb-8 border-2 border-indigo-500 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-indigo-400">BILLING RECORDS</h2>
+                <button onclick="toggleHistory()" class="text-red-400 font-bold underline">CLOSE [X]</button>
             </div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Truck Model</label><input type="text" id="vModel" placeholder="e.g. TATA 2518"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Driver Name</label><input type="text" id="dName" placeholder="DRIVER NAME"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Driver Contact</label><input type="text" id="dPhone" placeholder="DRIVER PHONE"></div>
-            <div class="col-span-1 lg:col-span-4"><label class="text-xs font-bold text-yellow-500 uppercase">Mechanic Name</label><input type="text" id="mName" placeholder="NAME"></div>
+            <input type="text" id="searchBox" onkeyup="searchBills()" placeholder="Search by Vehicle No..." class="mb-4 border-indigo-500/50">
+            <div class="overflow-x-auto max-h-[500px]">
+                <table class="w-full text-sm">
+                    <thead class="bg-indigo-900 sticky top-0">
+                        <tr><th class="p-3">DATE</th><th>VEHICLE NO</th><th>OWNER</th><th>TOTAL</th><th class="text-center">ACTION</th></tr>
+                    </thead>
+                    <tbody id="historyTableBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="glass-card p-8 shadow-2xl overflow-hidden">
+        <div class="glass-card p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Vehicle No</label><input type="text" id="vNo"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Name</label><input type="text" id="oName"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Phone</label><input type="text" id="oPhone"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Date</label><input type="date" id="vDate"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Wheels</label><select id="vWheels"><option>6 CHAKKA</option><option>10 CHAKKA</option><option>12 CHAKKA</option><option>14 CHAKKA</option><option>16 CHAKKA</option><option>22 CHAKKA</option></select></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Model</label><input type="text" id="vModel"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Driver</label><input type="text" id="dName"></div>
+            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Mechanic</label><input type="text" id="mName"></div>
+        </div>
+
+        <div class="glass-card p-8 shadow-2xl">
             <table class="w-full mb-6">
-                <thead class="text-yellow-500 border-b border-gray-700 uppercase text-xs tracking-wider">
+                <thead class="text-yellow-500 border-b border-gray-700 uppercase text-xs">
                     <tr><th class="p-4 w-16">SN</th><th>WORK DESCRIPTION</th><th class="w-24 text-center">QTY</th><th class="w-32 text-right">RATE</th><th class="w-32 text-right">AMOUNT</th></tr>
                 </thead>
                 <tbody id="workTable">
                     <tr class="border-b border-gray-800/50">
                         <td class="p-4 font-bold text-gray-500">1</td>
-                        <td class="p-2"><input type="text" class="row-desc bg-transparent border-0 focus:bg-slate-800"></td>
+                        <td class="p-2"><input type="text" class="row-desc bg-transparent border-0"></td>
                         <td class="p-2"><input type="number" class="row-qty text-center bg-transparent" value="1" oninput="calc()"></td>
                         <td class="p-2"><input type="number" class="row-rate text-right bg-transparent" oninput="calc()"></td>
                         <td class="p-2 text-right font-bold text-yellow-500">₹<span class="row-total">0</span></td>
                     </tr>
                 </tbody>
             </table>
-            <div class="flex flex-wrap justify-between items-center mt-6 gap-4">
-                <button onclick="addRow()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform active:scale-95">+ ADD LINE</button>
+            <div class="flex justify-between items-center mt-6">
+                <button onclick="addRow()" class="bg-blue-600 px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform active:scale-95">+ ADD LINE</button>
                 <div class="text-right">
-                    <p class="text-gray-400 text-xs font-bold uppercase tracking-widest">Grand Total</p>
-                    <h2 class="text-5xl font-black text-yellow-500 tracking-tighter">₹<span id="grandTotal">0</span></h2>
+                    <p class="text-gray-400 text-xs font-bold">GRAND TOTAL</p>
+                    <h2 class="text-5xl font-black text-yellow-500">₹<span id="grandTotal">0</span></h2>
                 </div>
             </div>
-            <button onclick="printBill()" class="w-full mt-10 bg-green-600 hover:bg-green-500 text-white py-6 rounded-2xl font-black text-3xl uppercase shadow-2xl transition-all border-b-8 border-green-800 active:border-b-0">SAVE & PRINT INVOICE</button>
+            <button onclick="processBill()" class="w-full mt-10 bg-green-600 text-white py-6 rounded-2xl font-black text-3xl uppercase shadow-2xl transition-all">SAVE & PRINT INVOICE</button>
         </div>
     </div>
 
     <div id="printArea" class="hidden"></div>
 
     <script>
-        const MASTER_PASS = "Bapi@0520";
-
+        const PASS = "Bapi@0520";
+        
         window.onload = function() {
             if(localStorage.getItem("mtg_auth") === "true") {
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
+                loadHistory();
             }
         };
 
         function doLogin() {
-            if(document.getElementById('passInput').value === MASTER_PASS) {
+            if(document.getElementById('passInput').value === PASS) {
                 localStorage.setItem("mtg_auth", "true");
                 location.reload();
-            } else { alert("ACCESS DENIED: WRONG PASSWORD!"); }
+            } else { alert("WRONG PASSWORD!"); }
         }
 
-        function doLogout() {
-            localStorage.removeItem("mtg_auth");
-            location.reload();
-        }
+        function doLogout() { localStorage.removeItem("mtg_auth"); location.reload(); }
 
         function addRow() {
             let t = document.getElementById('workTable');
             let r = t.insertRow();
             r.className = "border-b border-gray-800/50";
-            r.innerHTML = `<td class="p-4 font-bold text-gray-500">${t.rows.length}</td><td class="p-2"><input type="text" class="row-desc bg-transparent border-0 focus:bg-slate-800"></td><td class="p-2"><input type="number" class="row-qty text-center bg-transparent" value="1" oninput="calc()"></td><td class="p-2"><input type="number" class="row-rate text-right bg-transparent" oninput="calc()"></td><td class="p-2 text-right font-bold text-yellow-500">₹<span class="row-total">0</span></td>`;
+            r.innerHTML = `<td class="p-4 font-bold text-gray-500">${t.rows.length}</td><td class="p-2"><input type="text" class="row-desc bg-transparent border-0"></td><td class="p-2"><input type="number" class="row-qty text-center bg-transparent" value="1" oninput="calc()"></td><td class="p-2"><input type="number" class="row-rate text-right bg-transparent" oninput="calc()"></td><td class="p-2 text-right font-bold text-yellow-500">₹<span class="row-total">0</span></td>`;
         }
 
         function calc() {
@@ -138,62 +142,114 @@
             document.getElementById('grandTotal').innerText = grand;
         }
 
-        function printBill() {
-            const v = document.getElementById('vNo').value;
-            const d = document.getElementById('vDate').value;
-            if(!v || !d) return alert("Vehicle No and Date Required!");
+        function toggleHistory() { document.getElementById('historySection').classList.toggle('hidden'); }
 
-            let items = "";
-            document.querySelectorAll('#workTable tr').forEach((row, i) => {
+        function loadHistory() {
+            let history = JSON.parse(localStorage.getItem("mtg_history") || "[]");
+            let html = "";
+            history.forEach((bill, index) => {
+                html += `<tr class="border-b border-gray-700 hover:bg-slate-800">
+                    <td class="p-3">${bill.date}</td>
+                    <td class="font-bold">${bill.vNo}</td>
+                    <td>${bill.owner}</td>
+                    <td class="text-yellow-500 font-bold">₹${bill.total}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="rePrintBill(${index})" class="bg-green-600 px-3 py-1 rounded mr-2 text-xs">Print</button>
+                        <button onclick="deleteBill(${index})" class="text-red-500 text-xs">Del</button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('historyTableBody').innerHTML = html;
+        }
+
+        function searchBills() {
+            let f = document.getElementById('searchBox').value.toUpperCase();
+            document.querySelectorAll('#historyTableBody tr').forEach(tr => {
+                tr.style.display = tr.innerText.toUpperCase().includes(f) ? "" : "none";
+            });
+        }
+
+        function deleteBill(i) {
+            if(confirm("Delete this bill?")) {
+                let h = JSON.parse(localStorage.getItem("mtg_history") || "[]");
+                h.splice(i, 1);
+                localStorage.setItem("mtg_history", JSON.stringify(h));
+                loadHistory();
+            }
+        }
+
+        function processBill() {
+            const bill = {
+                vNo: document.getElementById('vNo').value.toUpperCase(),
+                date: document.getElementById('vDate').value,
+                owner: document.getElementById('oName').value.toUpperCase(),
+                phone: document.getElementById('oPhone').value,
+                wheels: document.getElementById('vWheels').value,
+                model: document.getElementById('vModel').value.toUpperCase(),
+                driver: document.getElementById('dName').value.toUpperCase(),
+                mechanic: document.getElementById('mName').value.toUpperCase(),
+                total: document.getElementById('grandTotal').innerText,
+                items: []
+            };
+
+            if(!bill.vNo || !bill.date) return alert("Vehicle No and Date Required!");
+
+            document.querySelectorAll('#workTable tr').forEach(row => {
                 let desc = row.querySelector('.row-desc').value.toUpperCase();
                 let q = row.querySelector('.row-qty').value;
                 let r = row.querySelector('.row-rate').value;
-                if(desc) items += `<tr><td style="text-align:center">${i+1}</td><td>${desc}</td><td style="text-align:center">${q}</td><td style="text-align:right">${r}</td><td style="text-align:right"><b>${q*r}</b></td></tr>`;
+                if(desc) bill.items.push({ desc, q, r });
+            });
+
+            let history = JSON.parse(localStorage.getItem("mtg_history") || "[]");
+            history.unshift(bill);
+            localStorage.setItem("mtg_history", JSON.stringify(history));
+            loadHistory();
+            executePrint(bill);
+        }
+
+        function rePrintBill(index) {
+            let history = JSON.parse(localStorage.getItem("mtg_history") || "[]");
+            executePrint(history[index]);
+        }
+
+        function executePrint(bill) {
+            let rowsHtml = "";
+            bill.items.forEach((it, i) => {
+                rowsHtml += `<tr><td style="text-align:center">${i+1}</td><td>${it.desc}</td><td style="text-align:center">${it.q}</td><td style="text-align:right">${it.r}</td><td style="text-align:right"><b>${it.q*it.r}</b></td></tr>`;
             });
 
             const template = (label) => `
                 <div class="print-page">
                     <div style="display:flex; justify-content:space-between; border-bottom:4px solid black; padding-bottom:5px;">
-                        <div>
-                            <h1 style="margin:0; font-size:42px; font-weight:900;">MAA TARA GARAGE</h1>
-                            <p style="margin:0; font-weight:bold;">TRANSPORT NAGAR, RAIPUR (C.G.) | Mob: 94255-07393</p>
-                        </div>
-                        <div style="text-align:right">
-                            <h2 style="border:2px solid black; padding:5px 15px; margin:0; background:#eee;">${document.getElementById('docType').value}</h2>
-                            <p style="margin-top:5px;">Date: <b>${d}</b></p>
-                        </div>
+                        <div><h1 style="margin:0; font-size:42px;">MAA TARA GARAGE</h1><p style="margin:0; font-weight:bold;">TRANSPORT NAGAR, RAIPUR (C.G.) | 94255-07393</p></div>
+                        <div style="text-align:right"><h2 style="border:2px solid black; padding:5px 15px; margin:0; background:#eee;">INVOICE</h2><p>Date: <b>${bill.date}</b></p></div>
                     </div>
-                    <div style="margin:15px 0; display:grid; grid-template-columns:1fr 1fr; gap:8px; border:1px solid black; padding:12px; font-size:13px;">
-                        <span><b>VEHICLE NO:</b> ${v.toUpperCase()}</span> <span><b>OWNER:</b> ${document.getElementById('oName').value.toUpperCase()}</span>
-                        <span><b>MODEL:</b> ${document.getElementById('vModel').value.toUpperCase()} (${document.getElementById('vWheels').value})</span> <span><b>PHONE:</b> ${document.getElementById('oPhone').value}</span>
-                        <span><b>DRIVER:</b> ${document.getElementById('dName').value.toUpperCase()}</span> <span><b>MECHANIC:</b> ${document.getElementById('mName').value.toUpperCase()}</span>
+                    <div style="margin:15px 0; display:grid; grid-template-columns:1fr 1fr; gap:8px; border:1px solid black; padding:10px; font-size:13px;">
+                        <span><b>VEHICLE NO:</b> ${bill.vNo}</span> <span><b>OWNER:</b> ${bill.owner}</span>
+                        <span><b>MODEL:</b> ${bill.model} (${bill.wheels})</span> <span><b>PHONE:</b> ${bill.phone}</span>
+                        <span><b>DRIVER:</b> ${bill.driver}</span> <span><b>MECHANIC:</b> ${bill.mechanic}</span>
                     </div>
                     <table>
-                        <thead><tr style="background:#f1f5f9;"><th style="width:40px">SN</th><th>DESCRIPTION OF WORK</th><th style="width:60px">QTY</th><th style="width:90px">RATE</th><th style="width:110px">AMOUNT</th></tr></thead>
-                        <tbody>${items}</tbody>
-                        <tfoot><tr><th colspan="4" style="text-align:right; font-size:18px;">GRAND TOTAL:</th><th style="text-align:right; font-size:20px;">₹${document.getElementById('grandTotal').innerText}</th></tr></tfoot>
+                        <thead><tr style="background:#eee;"><th>SN</th><th>DESCRIPTION OF WORK</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead>
+                        <tbody>${rowsHtml}</tbody>
+                        <tfoot><tr><th colspan="4" style="text-align:right; font-size:18px;">GRAND TOTAL:</th><th style="text-align:right; font-size:20px;">₹${bill.total}</th></tr></tfoot>
                     </table>
                     <div class="terms-box">
-                        <b>TERMS & CONDITIONS:</b><br>
-                        1. Goods once sold will not be taken back or exchanged.<br>
-                        2. The garage is not responsible for any loss by fire, accident, or theft while the vehicle is in our custody.<br>
-                        3. Spare parts are not sold by the garage. They are either provided by you or installed with your prior consent and approval.
+                        <b>TERMS:</b> 1. Goods no return. 2. Not responsible for loss/fire. 3. Spare parts are provided by customer or with prior consent.
                     </div>
-                    <div class="thank-you-note">
-                        🌟 Thank you for choosing MAA TARA GARAGE! We value your trust and look forward to serving you again. Have a safe journey! 🌟
-                    </div>
+                    <div class="thank-you">Thank you for choosing MAA TARA GARAGE! Have a safe journey.</div>
                     <div style="margin-top:50px; display:flex; justify-content:space-between;">
-                        <span style="border-top:1px solid black; width:150px; text-align:center; font-weight:bold; padding-top:5px;">Customer Sign</span>
-                        <span style="border-top:1px solid black; width:180px; text-align:center; font-weight:bold; padding-top:5px;">For Maa Tara Garage</span>
+                        <span style="border-top:1px solid black; width:150px; text-align:center; font-weight:bold;">Customer Sign</span>
+                        <span style="border-top:1px solid black; width:180px; text-align:center; font-weight:bold;">For Maa Tara Garage</span>
                     </div>
-                    <p style="text-align:center; font-size:9px; margin-top:20px; color:#666 !important;">--- ${label} ---</p>
+                    <p style="text-align:center; font-size:10px; margin-top:20px;">--- ${label} ---</p>
                 </div>`;
 
-            const printDiv = document.getElementById('printArea');
-            printDiv.innerHTML = template("CUSTOMER COPY") + template("OFFICE COPY");
-            printDiv.classList.remove('hidden');
+            document.getElementById('printArea').innerHTML = template("CUSTOMER COPY") + template("OFFICE COPY");
+            document.getElementById('printArea').classList.remove('hidden');
             window.print();
-            printDiv.classList.add('hidden');
+            document.getElementById('printArea').classList.add('hidden');
         }
     </script>
 </body>
