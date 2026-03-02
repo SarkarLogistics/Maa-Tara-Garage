@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.Logistic - User App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans">
+    <div id="authSection" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-700">
+            <h1 class="text-3xl font-bold text-center mb-6 text-yellow-500">S.LOGISTIC</h1>
+            <input type="text" id="userPass" placeholder="Enter Access Password" class="w-full p-4 bg-slate-700 rounded-lg mb-4 outline-none border-2 border-transparent focus:border-yellow-500">
+            <button onclick="login()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 rounded-lg transition">Unlock App</button>
+            <p class="text-center mt-4 text-sm text-gray-400">Contact Owner for Password</p>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden p-4 max-w-lg mx-auto">
+        <div class="flex justify-between items-center mb-6 bg-slate-800 p-4 rounded-xl">
+            <span class="text-yellow-500 font-bold">Days Left: <span id="daysDisplay">--</span></span>
+            <button onclick="location.reload()" class="text-xs bg-red-500 px-2 py-1 rounded">Logout</button>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-4">Book Your Vehicle</h2>
+        <form id="bookingForm" class="space-y-4 bg-slate-800 p-6 rounded-2xl">
+            <input type="text" placeholder="Your Name" required class="w-full p-3 bg-slate-700 rounded-lg">
+            <input type="text" placeholder="Pickup Location" required class="w-full p-3 bg-slate-700 rounded-lg">
+            <input type="text" placeholder="Drop Location" required class="w-full p-3 bg-slate-700 rounded-lg">
+            <select class="w-full p-3 bg-slate-700 rounded-lg">
+                <option>Select Vehicle</option>
+                <option>Pickup Truck</option>
+                <option>Mini Van</option>
+                <option>Container 14ft</option>
+            </select>
+            <button type="submit" class="w-full bg-green-500 py-3 rounded-lg font-bold">Send Booking to Owner</button>
+        </form>
+    </div>
+
+    <script>
+        function login() {
+            const pass = document.getElementById('userPass').value;
+            // Admin ne jo password banaya hoga wo yahan check hoga
+            if(pass === "LOGISTIC786") { 
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('daysDisplay').innerText = "30"; 
+            } else {
+                alert("Wrong Password! Call Owner.");
+            }
+        }
+    </script>
+</body>
+</html>

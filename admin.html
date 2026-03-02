@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.Logistic - Owner Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-black p-4 text-white font-bold text-xl text-center">OWNER ADMIN DASHBOARD</nav>
+    
+    <div class="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
+            <h2 class="text-xl font-bold mb-4">Create New Access</h2>
+            <input type="text" id="newPass" placeholder="Enter Password (e.g. ABC12)" class="w-full p-3 border rounded mb-4">
+            <select id="days" class="w-full p-3 border rounded mb-4">
+                <option value="1">1 Day Access</option>
+                <option value="7">7 Days Access</option>
+                <option value="30">30 Days Access</option>
+            </select>
+            <button onclick="genPass()" class="w-full bg-black text-white py-3 rounded-lg font-bold">Generate & Copy</button>
+            <p id="status" class="mt-2 text-green-600 font-bold hidden text-center">Copied to Clipboard!</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
+            <h2 class="text-xl font-bold mb-4">Live Bookings</h2>
+            <div class="text-gray-400 italic">User bookings will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        function genPass() {
+            const p = document.getElementById('newPass').value;
+            if(!p) return alert("Type a password first!");
+            navigator.clipboard.writeText(p);
+            document.getElementById('status').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
