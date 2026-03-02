@@ -3,51 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.Logistic - User App</title>
+    <title>S.Logistic - User Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-slate-900 text-white font-sans">
-    <div id="authSection" class="flex flex-col items-center justify-center min-h-screen p-6">
-        <div class="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-700">
-            <h1 class="text-3xl font-bold text-center mb-6 text-yellow-500">S.LOGISTIC</h1>
-            <input type="text" id="userPass" placeholder="Enter Access Password" class="w-full p-4 bg-slate-700 rounded-lg mb-4 outline-none border-2 border-transparent focus:border-yellow-500">
-            <button onclick="login()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 rounded-lg transition">Unlock App</button>
-            <p class="text-center mt-4 text-sm text-gray-400">Contact Owner for Password</p>
+<body class="bg-slate-900 text-white font-sans min-h-screen">
+    <div id="lockScreen" class="flex flex-col items-center justify-center h-screen p-6">
+        <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-yellow-500 text-center">
+            <h1 class="text-3xl font-bold mb-6 text-yellow-500">S.LOGISTIC</h1>
+            <input type="password" id="passInput" placeholder="Enter Access Password" class="w-full p-4 bg-slate-700 rounded-lg mb-4 outline-none border-2 border-transparent focus:border-yellow-500 text-center">
+            <button onclick="checkAccess()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 rounded-lg transition text-lg">UNLOCK NOW</button>
         </div>
     </div>
 
     <div id="mainApp" class="hidden p-4 max-w-lg mx-auto">
-        <div class="flex justify-between items-center mb-6 bg-slate-800 p-4 rounded-xl">
-            <span class="text-yellow-500 font-bold">Days Left: <span id="daysDisplay">--</span></span>
-            <button onclick="location.reload()" class="text-xs bg-red-500 px-2 py-1 rounded">Logout</button>
+        <div class="flex justify-between items-center mb-6 bg-slate-800 p-4 rounded-xl border-l-4 border-green-500">
+            <div><p class="text-xs text-gray-400">Status</p><p class="text-green-400 font-bold">Active ✅</p></div>
+            <div class="text-right"><p class="text-xs text-gray-400">Validity</p><p id="daysDisplay" class="text-yellow-500 font-bold">-- Days</p></div>
         </div>
-
-        <h2 class="text-2xl font-bold mb-4">Book Your Vehicle</h2>
-        <form id="bookingForm" class="space-y-4 bg-slate-800 p-6 rounded-2xl">
-            <input type="text" placeholder="Your Name" required class="w-full p-3 bg-slate-700 rounded-lg">
-            <input type="text" placeholder="Pickup Location" required class="w-full p-3 bg-slate-700 rounded-lg">
-            <input type="text" placeholder="Drop Location" required class="w-full p-3 bg-slate-700 rounded-lg">
-            <select class="w-full p-3 bg-slate-700 rounded-lg">
-                <option>Select Vehicle</option>
-                <option>Pickup Truck</option>
-                <option>Mini Van</option>
-                <option>Container 14ft</option>
-            </select>
-            <button type="submit" class="w-full bg-green-500 py-3 rounded-lg font-bold">Send Booking to Owner</button>
-        </form>
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-lg text-center">
+            <h2 class="text-2xl font-bold mb-4">Welcome to S.Logistic</h2>
+            <p class="text-gray-400 mb-6">Your app is successfully unlocked.</p>
+            <button onclick="location.reload()" class="w-full bg-slate-700 py-2 rounded-lg text-sm">Logout</button>
+        </div>
     </div>
 
     <script>
-        function login() {
-            const pass = document.getElementById('userPass').value;
-            // Admin ne jo password banaya hoga wo yahan check hoga
-            if(pass === "LOGISTIC786") { 
-                document.getElementById('authSection').classList.add('hidden');
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyrPOh29VKzPCXGPtyGbkHXGlJOIqx69E",
+            authDomain: "fir-logistics-85794.firebaseapp.com",
+            projectId: "fir-logistics-85794",
+            storageBucket: "fir-logistics-85794.firebasestorage.app",
+            messagingSenderId: "689254184022",
+            appId: "1:689254184022:web:b3a4af5219dcff9b74f7f7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        async function checkAccess() {
+            const userInput = document.getElementById('passInput').value;
+            const doc = await db.collection("settings").doc("access").get();
+            if (doc.exists && userInput === doc.data().password) {
+                document.getElementById('lockScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
-                document.getElementById('daysDisplay').innerText = "30"; 
-            } else {
-                alert("Wrong Password! Call Owner.");
-            }
+                document.getElementById('daysDisplay').innerText = doc.data().days + " Days";
+            } else { alert("Wrong Password!"); }
         }
     </script>
 </body>

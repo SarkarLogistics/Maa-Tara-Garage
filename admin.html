@@ -3,37 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.Logistic - Owner Admin</title>
+    <title>S.Logistic Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-    <nav class="bg-black p-4 text-white font-bold text-xl text-center">OWNER ADMIN DASHBOARD</nav>
-    
-    <div class="max-w-4xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
-            <h2 class="text-xl font-bold mb-4">Create New Access</h2>
-            <input type="text" id="newPass" placeholder="Enter Password (e.g. ABC12)" class="w-full p-3 border rounded mb-4">
-            <select id="days" class="w-full p-3 border rounded mb-4">
-                <option value="1">1 Day Access</option>
-                <option value="7">7 Days Access</option>
-                <option value="30">30 Days Access</option>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-black text-white p-4 font-bold text-center">S.LOGISTIC OWNER DASHBOARD</nav>
+    <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-2xl shadow-xl">
+        <div class="space-y-4">
+            <input type="text" id="newPass" placeholder="Set New Password" class="w-full p-3 border rounded-lg bg-gray-50 outline-none">
+            <select id="validity" class="w-full p-3 border rounded-lg bg-gray-50">
+                <option value="30">30 Days</option>
+                <option value="365">1 Year</option>
             </select>
-            <button onclick="genPass()" class="w-full bg-black text-white py-3 rounded-lg font-bold">Generate & Copy</button>
-            <p id="status" class="mt-2 text-green-600 font-bold hidden text-center">Copied to Clipboard!</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
-            <h2 class="text-xl font-bold mb-4">Live Bookings</h2>
-            <div class="text-gray-400 italic">User bookings will appear here...</div>
+            <button onclick="saveToDatabase()" id="btn" class="w-full bg-black text-white py-4 rounded-xl font-bold">SAVE PASSWORD</button>
+            <p id="msg" class="hidden text-center text-green-600 font-bold">Updated Successfully!</p>
         </div>
     </div>
 
     <script>
-        function genPass() {
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyrPOh29VKzPCXGPtyGbkHXGlJOIqx69E",
+            authDomain: "fir-logistics-85794.firebaseapp.com",
+            projectId: "fir-logistics-85794",
+            storageBucket: "fir-logistics-85794.firebasestorage.app",
+            messagingSenderId: "689254184022",
+            appId: "1:689254184022:web:b3a4af5219dcff9b74f7f7"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        async function saveToDatabase() {
             const p = document.getElementById('newPass').value;
-            if(!p) return alert("Type a password first!");
-            navigator.clipboard.writeText(p);
-            document.getElementById('status').classList.remove('hidden');
+            const d = document.getElementById('validity').value;
+            if(!p) return alert("Type password!");
+            await db.collection("settings").doc("access").set({ password: p, days: d });
+            document.getElementById('msg').classList.remove('hidden');
+            setTimeout(() => { document.getElementById('msg').classList.add('hidden'); }, 3000);
         }
     </script>
 </body>
