@@ -2,195 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAA TARA GARAGE - ERP</title>
+    <title>MAA TARA GARAGE - FINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; min-height: 100vh; }
-        .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; }
-        input, select { background: #1e293b; color: white; border: 1px solid #334155; padding: 10px; border-radius: 8px; width: 100%; text-transform: uppercase; outline: none; }
-        input:focus { border-color: #fbbf24; }
+        body { background: #0f172a; color: white; font-family: sans-serif; }
+        input, select { background: #1e293b; color: white; border: 1px solid #334155; padding: 10px; border-radius: 8px; width: 100%; text-transform: uppercase; }
         @media print {
             .no-print { display: none !important; }
-            body { background: white !important; color: black !important; padding: 0; }
-            .print-page { border: 2px solid black; padding: 30px; margin: 15px; min-height: 95vh; }
+            body { background: white !important; color: black !important; }
+            .print-page { border: 2px solid black; padding: 25px; margin: 10px; page-break-after: always; }
             table { width: 100%; border-collapse: collapse; margin-top: 15px; }
             th, td { border: 1px solid black !important; padding: 8px; text-align: left; }
         }
     </style>
 </head>
-<body class="p-4 lg:p-8">
+<body class="p-4">
 
-    <div id="loginSection" class="flex flex-col items-center justify-center h-[80vh] no-print">
-        <div class="card p-10 w-full max-w-sm text-center border-t-4 border-yellow-500 shadow-2xl">
-            <h1 class="text-3xl font-black text-yellow-500 mb-2">MAA TARA GARAGE</h1>
-            <input type="password" id="passCode" placeholder="ENTER PASSWORD" class="mb-6 text-center text-xl">
-            <button onclick="login()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl shadow-lg">ACCESS SYSTEM</button>
+    <div id="loginSection" class="flex flex-col items-center justify-center h-screen no-print">
+        <div class="bg-slate-800 p-8 rounded-2xl border-t-4 border-yellow-500 shadow-2xl w-80 text-center">
+            <h1 class="text-2xl font-bold text-yellow-500 mb-6">MAA TARA GARAGE</h1>
+            <input type="password" id="passCode" placeholder="PASSWORD" class="mb-4 text-center">
+            <button onclick="checkLogin()" class="w-full bg-yellow-500 text-black font-bold py-3 rounded-lg">LOGIN</button>
         </div>
     </div>
 
-    <div id="appSection" class="hidden max-w-7xl mx-auto no-print">
-        <header class="card p-6 mb-8 flex flex-wrap justify-between items-center border-b-4 border-yellow-500">
-            <div>
-                <h1 class="text-3xl font-black text-yellow-500">MAA TARA GARAGE</h1>
-                <p class="text-sm font-bold text-gray-300 uppercase">Transport Nagar, Raipur (C.G.)</p>
-            </div>
-            <div class="flex gap-4 items-center mt-4 lg:mt-0">
-                <select id="docType" class="w-48 border-yellow-500 text-yellow-500 font-bold">
-                    <option value="FINAL BILL">FINAL BILL</option>
-                    <option value="QUOTATION">QUOTATION</option>
-                </select>
-                <button onclick="location.reload()" class="bg-red-600 px-6 py-2 rounded-lg font-bold">LOGOUT</button>
-            </div>
-        </header>
-
-        <div class="card p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 shadow-inner">
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Vehicle No</label><input type="text" id="vNo" placeholder="Enter Vehicle No"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Name</label><input type="text" id="oName" placeholder="Enter Owner Name"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Owner Phone</label><input type="text" id="oPhone" placeholder="Enter Owner Phone"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Date</label><input type="date" id="bDate"></div>
-            
-            <div class="space-y-1">
-                <label class="text-xs font-bold text-yellow-500 uppercase">Wheels</label>
-                <select id="vWheels">
-                    <option>6 CHAKKA</option><option>10 CHAKKA</option><option>12 CHAKKA</option>
-                    <option>14 CHAKKA</option><option>16 CHAKKA</option><option>18 CHAKKA</option><option>22 CHAKKA</option>
-                </select>
-            </div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Truck Model Name</label><input type="text" id="vModel" placeholder="e.g. TATA 2518 / LEYLAND"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Driver Name</label><input type="text" id="dName" placeholder="Enter Driver Name"></div>
-            <div class="space-y-1"><label class="text-xs font-bold text-yellow-500 uppercase">Driver Contact</label><input type="text" id="dPhone" placeholder="Enter Driver Contact"></div>
-            <div class="col-span-1 lg:col-span-4"><label class="text-xs font-bold text-yellow-500 uppercase">Mechanic Name</label><input type="text" id="mName" placeholder="Enter Mechanic Name"></div>
+    <div id="appSection" class="hidden max-w-6xl mx-auto no-print">
+        <div class="flex justify-between items-center mb-6 bg-slate-800 p-4 rounded-xl border-b-4 border-yellow-500">
+            <h1 class="text-2xl font-bold text-yellow-500">MAA TARA GARAGE</h1>
+            <select id="docType" class="w-40 bg-slate-700 text-white p-2 rounded">
+                <option>FINAL BILL</option>
+                <option>QUOTATION</option>
+            </select>
         </div>
 
-        <div class="card p-8 shadow-2xl">
-            <table class="w-full mb-6">
-                <thead class="text-yellow-500 border-b border-gray-700">
-                    <tr><th class="p-4 w-16">SN</th><th>WORK DESCRIPTION</th><th class="w-24 text-center">QTY</th><th class="w-32 text-right">RATE</th><th class="w-32 text-right">AMOUNT</th></tr>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-slate-800 p-6 rounded-xl">
+            <input type="text" id="vNo" placeholder="VEHICLE NO">
+            <input type="text" id="oName" placeholder="OWNER NAME">
+            <input type="text" id="oPhone" placeholder="OWNER PHONE">
+            <input type="date" id="bDate">
+            <select id="vWheels">
+                <option>6 CHAKKA</option><option>10 CHAKKA</option><option>12 CHAKKA</option>
+                <option>14 CHAKKA</option><option>16 CHAKKA</option><option>22 CHAKKA</option>
+            </select>
+            <input type="text" id="vModel" placeholder="TRUCK MODEL">
+            <input type="text" id="dName" placeholder="DRIVER NAME">
+            <input type="text" id="dPhone" placeholder="DRIVER PHONE">
+            <input type="text" id="mName" placeholder="MECHANIC NAME" class="md:col-span-4">
+        </div>
+
+        <div class="bg-slate-800 p-6 rounded-xl">
+            <table class="w-full mb-4">
+                <thead class="text-yellow-500 border-b border-gray-600">
+                    <tr><th>SN</th><th>WORK DESCRIPTION</th><th class="w-20">QTY</th><th class="w-28">RATE</th><th class="w-28 text-right">AMT</th></tr>
                 </thead>
                 <tbody id="workTable">
-                    <tr class="border-b border-gray-800/50">
-                        <td class="p-4 font-bold text-gray-500">1</td>
-                        <td class="p-2"><input type="text" class="row-desc border-0 bg-transparent"></td>
-                        <td class="p-2"><input type="number" class="row-qty text-center bg-transparent" value="1" oninput="calculate()"></td>
-                        <td class="p-2"><input type="number" class="row-rate text-right bg-transparent" placeholder="0" oninput="calculate()"></td>
-                        <td class="p-2 text-right font-bold text-yellow-500">₹<span class="row-amt">0</span></td>
+                    <tr>
+                        <td class="p-2">1</td>
+                        <td><input type="text" class="row-desc border-0"></td>
+                        <td><input type="number" class="row-qty text-center" value="1" oninput="doTotal()"></td>
+                        <td><input type="number" class="row-rate text-right" oninput="doTotal()"></td>
+                        <td class="text-right font-bold text-yellow-500">₹<span class="row-amt">0</span></td>
                     </tr>
                 </tbody>
             </table>
-            <div class="flex flex-wrap justify-between items-center mt-6">
-                <button onclick="addRow()" class="bg-blue-600 px-8 py-3 rounded-xl font-bold transition-all shadow-lg">+ ADD NEW LINE</button>
-                <div class="text-right">
-                    <p class="text-gray-400 text-xs font-bold">GRAND TOTAL</p>
-                    <h2 class="text-5xl font-black text-yellow-500">₹<span id="grandTotal">0</span></h2>
-                </div>
+            <div class="flex justify-between items-center">
+                <button onclick="addRow()" class="bg-blue-600 px-4 py-2 rounded font-bold">+ ADD LINE</button>
+                <h2 class="text-3xl font-bold text-yellow-500">TOTAL: ₹<span id="gTotal">0</span></h2>
             </div>
-            <button onclick="generatePrint()" class="w-full mt-10 bg-green-600 text-white py-6 rounded-2xl font-black text-3xl uppercase shadow-2xl">Save & Print Invoice</button>
+            <button onclick="startPrint()" class="w-full mt-8 bg-green-600 py-4 rounded-xl font-bold text-xl uppercase">SAVE & PRINT</button>
         </div>
     </div>
 
     <div id="printArea" class="hidden"></div>
 
     <script>
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAvR17FZtEaRPT1_xlHSGB6lc0tCTuwVSM", 
-            authDomain: "maa-tara-garage.firebaseapp.com", 
-            projectId: "maa-tara-garage", 
-            storageBucket: "maa-tara-garage.appspot.com", 
-            messagingSenderId: "689254184022", 
-            appId: "1:689254184022:web:b3a4af5219dcff9b74f7f7" 
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        function login() {
-            if(document.getElementById('passCode').value === "Rahul@6927") {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('appSection').classList.remove('hidden');
-            } else { alert("WRONG PASSWORD"); }
+        function checkLogin() {
+            // Password exact: Bapi@0520
+            if(document.getElementById('passCode').value === "Bapi@0520") {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('appSection').style.display = 'block';
+            } else { alert("Wrong Password!"); }
         }
 
         function addRow() {
             let t = document.getElementById('workTable');
             let r = t.insertRow();
-            r.className = "border-b border-gray-800/50";
-            r.innerHTML = `<td class="p-4 font-bold text-gray-500">${t.rows.length}</td><td class="p-2"><input type="text" class="row-desc border-0 bg-transparent"></td><td class="p-2"><input type="number" class="row-qty text-center bg-transparent" value="1" oninput="calculate()"></td><td class="p-2"><input type="number" class="row-rate text-right bg-transparent" oninput="calculate()"></td><td class="p-2 text-right font-bold text-yellow-500">₹<span class="row-amt">0</span></td>`;
+            r.innerHTML = `<td class="p-2">${t.rows.length}</td><td><input type="text" class="row-desc border-0"></td><td><input type="number" class="row-qty text-center" value="1" oninput="doTotal()"></td><td><input type="number" class="row-rate text-right" oninput="doTotal()"></td><td class="text-right font-bold text-yellow-500">₹<span class="row-amt">0</span></td>`;
         }
 
-        function calculate() {
-            let gTotal = 0;
+        function doTotal() {
+            let grand = 0;
             document.querySelectorAll('#workTable tr').forEach(row => {
-                let q = parseFloat(row.querySelector('.row-qty').value) || 0;
-                let r = parseFloat(row.querySelector('.row-rate').value) || 0;
-                let amt = q * r;
-                row.querySelector('.row-amt').innerText = amt;
-                gTotal += amt;
+                let q = row.querySelector('.row-qty').value || 0;
+                let r = row.querySelector('.row-rate').value || 0;
+                let a = q * r;
+                row.querySelector('.row-amt').innerText = a;
+                grand += a;
             });
-            document.getElementById('grandTotal').innerText = gTotal;
+            document.getElementById('gTotal').innerText = grand;
         }
 
-        async function generatePrint() {
-            const data = {
-                vNo: document.getElementById('vNo').value.toUpperCase(),
-                owner: document.getElementById('oName').value.toUpperCase(),
-                phone: document.getElementById('oPhone').value,
-                date: document.getElementById('bDate').value,
-                wheels: document.getElementById('vWheels').value,
-                model: document.getElementById('vModel').value.toUpperCase(),
-                driver: document.getElementById('dName').value.toUpperCase(),
-                dPhone: document.getElementById('dPhone').value,
-                mechanic: document.getElementById('mName').value.toUpperCase(),
-                total: document.getElementById('grandTotal').innerText,
+        function startPrint() {
+            const bill = {
+                v: document.getElementById('vNo').value,
+                o: document.getElementById('oName').value,
+                dt: document.getElementById('bDate').value,
+                gt: document.getElementById('gTotal').innerText,
                 type: document.getElementById('docType').value
             };
-
-            if(!data.vNo || !data.date) return alert("Vehicle No & Date are mandatory!");
-
-            try { await db.collection("garage_final").add(data); } catch(e) {}
+            
+            if(!bill.v || !bill.dt) return alert("Vehicle No & Date bharo!");
 
             let items = "";
             document.querySelectorAll('#workTable tr').forEach((row, i) => {
-                let desc = row.querySelector('.row-desc').value.toUpperCase();
+                let d = row.querySelector('.row-desc').value;
                 let q = row.querySelector('.row-qty').value;
                 let r = row.querySelector('.row-rate').value;
-                if(desc) items += `<tr><td style="text-align:center">${i+1}</td><td>${desc}</td><td style="text-align:center">${q}</td><td style="text-align:right">${r}</td><td style="text-align:right"><b>${q*r}</b></td></tr>`;
+                if(d) items += `<tr><td>${i+1}</td><td>${d.toUpperCase()}</td><td>${q}</td><td>${r}</td><td style="text-align:right">${q*r}</td></tr>`;
             });
 
-            const invoiceBody = (copy) => `
+            const template = (title) => `
                 <div class="print-page">
-                    <div style="display:flex; justify-content:space-between; border-bottom:4px solid #000; padding-bottom:10px;">
-                        <div>
-                            <h1 style="margin:0; font-size:45px; font-weight:900;">MAA TARA GARAGE</h1>
-                            <p style="margin:0; font-weight:bold; font-size:16px;">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p>
-                            <p style="margin:0; font-size:14px;">Mob: +91 94255 07393, +91 73895 07393</p>
-                        </div>
-                        <div style="text-align:right">
-                            <h2 style="border:3px solid #000; padding:10px 20px; margin:0; font-size:20px;">${data.type}</h2>
-                            <p style="margin-top:10px; font-size:18px;"><b>Date:</b> ${data.date}</p>
-                        </div>
+                    <h1 style="margin:0; font-size:35px; text-align:center;">MAA TARA GARAGE</h1>
+                    <p style="text-align:center; margin:0;">Transport Nagar, Raipur | 9425507393</p>
+                    <hr style="margin:15px 0;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                        <b>${title}</b> <b>Date: ${bill.dt}</b>
                     </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:20px 0; border:2px solid #000; padding:15px;">
-                        <span><b>VEHICLE NO:</b> ${data.vNo}</span> <span><b>OWNER:</b> ${data.owner}</span>
-                        <span><b>OWNER PH:</b> ${data.phone}</span> <span><b>MODEL:</b> ${data.model} (${data.wheels})</span>
-                        <span><b>DRIVER:</b> ${data.driver}</span> <span><b>DRIVER PH:</b> ${data.dPhone}</span>
-                        <span colspan="2"><b>MECHANIC:</b> ${data.mechanic}</span>
-                    </div>
+                    <p><b>Vehicle No:</b> ${bill.v.toUpperCase()} | <b>Model:</b> ${document.getElementById('vModel').value.toUpperCase()}</p>
+                    <p><b>Owner:</b> ${bill.o.toUpperCase()} | <b>Mechanic:</b> ${document.getElementById('mName').value.toUpperCase()}</p>
                     <table>
-                        <thead><tr style="background:#eee;"><th>SN</th><th>DESCRIPTION OF WORK</th><th style="text-align:center">QTY</th><th style="text-align:right">RATE</th><th style="text-align:right">AMOUNT</th></tr></thead>
+                        <thead><tr><th>SN</th><th>WORK</th><th>QTY</th><th>RATE</th><th>AMT</th></tr></thead>
                         <tbody>${items}</tbody>
-                        <tfoot><tr><td colspan="4" style="text-align:right; font-size:20px; font-weight:bold;">GRAND TOTAL:</td><td style="text-align:right; font-size:24px; font-weight:bold;">₹${data.total}</td></tr></tfoot>
+                        <tr><th colspan="4" style="text-align:right">GRAND TOTAL:</th><th style="text-align:right">₹${bill.gt}</th></tr>
                     </table>
-                    <div style="margin-top:80px; display:flex; justify-content:space-between;">
-                        <span style="border-top:2px solid #000; width:200px; text-align:center; font-weight:bold;">CUSTOMER SIGN</span>
-                        <span style="border-top:2px solid #000; width:200px; text-align:center; font-weight:bold;">FOR MAA TARA GARAGE</span>
+                    <div style="margin-top:50px; display:flex; justify-content:space-between;">
+                        <span>Customer Sign</span> <span>For Maa Tara Garage</span>
                     </div>
-                    <p style="text-align:center; font-size:10px; margin-top:30px;">--- ${copy} ---</p>
                 </div>`;
 
-            document.getElementById('printArea').innerHTML = invoiceBody("CUSTOMER COPY") + invoiceBody("OFFICE COPY");
-            document.getElementById('printArea').classList.remove('hidden');
+            document.getElementById('printArea').innerHTML = template("CUSTOMER COPY") + template("OFFICE COPY");
             window.print();
         }
     </script>
