@@ -9,18 +9,45 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Roboto', sans-serif; background: #0f172a; color: white; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), 
+                        url('https://images.unsplash.com/photo-1599256872237-5dcc0fbe9668?q=80&w=2000');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: white;
+        }
         .header-font { font-family: 'Orbitron', sans-serif; }
         input, select { text-transform: uppercase; background: #1e293b; color: white; border-radius: 8px; padding: 10px; outline: none; border: 1px solid #334155; }
         input:focus { border-color: #eab308; }
         @media print {
             .no-print { display: none; }
             body { background: white !important; color: black !important; padding: 0; }
-            .print-page { border: 2px solid #000; padding: 25px; margin-bottom: 20px; page-break-after: always; text-transform: uppercase; color: black; }
-            .highlight-box { background-color: #f1f5f9 !important; border: 1.5px solid #000 !important; font-weight: bold; padding: 4px 8px; }
+            .print-page { 
+                border: 3px solid #eab308; 
+                padding: 25px; 
+                margin-bottom: 20px; 
+                page-break-after: always; 
+                text-transform: uppercase; 
+                color: black;
+                position: relative;
+                overflow: hidden;
+            }
+            .print-page::before {
+                content: "";
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-image: url('https://images.unsplash.com/photo-1599256872237-5dcc0fbe9668?q=10&w=200');
+                background-repeat: repeat;
+                opacity: 0.03;
+                z-index: -1;
+            }
+            .highlight-box { background-color: #fef9c3 !important; border: 1px solid #000 !important; font-weight: bold; padding: 4px 8px; }
             table { width: 100%; border-collapse: collapse; margin-top: 10px; color: black; }
             th, td { border: 1px solid black !important; padding: 8px; }
-            th { background: #eeeeee !important; }
+            th { background: #f1f5f9 !important; }
         }
     </style>
 </head>
@@ -40,6 +67,7 @@
             <div>
                 <h2 class="header-font text-2xl font-bold text-yellow-500">MAA TARA GARAGE</h2>
                 <p class="text-xs text-gray-400">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p>
+                <p class="text-[10px] text-gray-500">+91 94255 07393, +91 73895 07393</p>
             </div>
             <div class="flex gap-3">
                 <button onclick="showHistory()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all">HISTORY</button>
@@ -58,6 +86,7 @@
                 </div>
                 <input type="text" id="regNo" placeholder="VEHICLE NO" class="font-bold text-yellow-400">
                 <input type="text" id="owner" placeholder="OWNER NAME">
+                <input type="text" id="ownerPhone" placeholder="OWNER PHONE">
                 <input type="date" id="date">
                 <select id="model">
                     <option>TATA MOTORS</option><option>ASHOK LEYLAND</option><option>BHARAT BENZ</option><option>EICHER MOTORS</option><option>MAHINDRA</option>
@@ -151,6 +180,7 @@
             const data = {
                 reg: document.getElementById('regNo').value,
                 owner: document.getElementById('owner').value,
+                ownerPhone: document.getElementById('ownerPhone').value,
                 date: document.getElementById('date').value,
                 total: document.getElementById('totalVal').innerText,
                 type: bType,
@@ -189,28 +219,41 @@
 
             const html = (copy) => `
                 <div class="print-page">
-                    <div style="display:flex; justify-content:space-between">
-                        <div><h1 class="header-font" style="font-size:38px; margin:0">MAA TARA GARAGE</h1><p style="font-weight:bold">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p></div>
-                        <div style="text-align:right"><div style="border:2px solid #000; padding:10px; font-weight:bold">${data.type}</div><p style="margin-top:10px">DATE: <span class="highlight-box">${data.date}</span></p></div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h1 class="header-font" style="font-size:38px; margin:0; color:#eab308">MAA TARA GARAGE</h1>
+                            <p style="font-weight:bold; font-size:14px; margin-top:3px;">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p>
+                            <p style="margin:0; font-size:12px;">MOB: +91 94255 07393, +91 73895 07393</p>
+                            <p style="margin:0; font-size:10px; color:#555;">SPECIALIST: TATA, ASHOK LEYLAND, BHARAT BENZ, EICHER TRUCKS</p>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="border:2px solid #000; padding:10px; font-weight:bold; min-width:180px; font-size:18px;">${data.type}</div>
+                            <p style="margin-top:10px; font-weight:bold;">DATE: <span class="highlight-box">${data.date}</span></p>
+                        </div>
                     </div>
-                    <table style="width:100%; margin:20px 0">
-                        <tr><td class="highlight-box">VEHICLE NO: <span style="font-size:20px">${data.reg}</span></td><td class="highlight-box">OWNER: ${data.owner}</td></tr>
+                    <table style="width:100%; margin:20px 0; border:1px solid #000;">
+                        <tr><td class="highlight-box" style="width:50%">VEHICLE NO: <span style="font-size:20px">${data.reg}</span></td><td class="highlight-box">OWNER: ${data.owner}</td></tr>
+                        <tr><td>MODEL: ${document.getElementById('model').value} (${document.getElementById('wheels').value})</td><td>OWNER PHONE: ${data.ownerPhone}</td></tr>
+                        <tr><td>MECHANIC: ${document.getElementById('mechanic').value}</td><td>DRIVER: ${document.getElementById('driver').value}</td></tr>
                     </table>
                     <table>
                         <thead><tr><th style="width:40px">SN</th><th>DESCRIPTION OF REPAIR WORK</th><th style="width:60px">QTY</th><th style="width:100px">RATE</th><th style="width:120px">AMOUNT</th></tr></thead>
                         <tbody>${items}</tbody>
-                        <tfoot><tr><th colspan="4" style="text-align:right; padding:15px; font-size:16px">QUOTATION AMOUNT:</th><th style="font-size:24px" class="highlight-box">₹${data.total}</th></tr></tfoot>
+                        <tfoot><tr><th colspan="4" style="text-align:right; padding:15px; font-size:16px;">QUOTATION AMOUNT:</th><th style="font-size:24px; text-align:right;" class="highlight-box">₹${data.total}</th></tr></tfoot>
                     </table>
-                    <div style="margin-top:20px; font-size:12px">
+                    <div style="margin-top:25px; font-size:11px; line-height:1.6; border:1px solid #ddd; padding:10px; border-radius:5px;">
                         <b>TERMS & CONDITIONS:</b><br>
                         1. WORK CARRIES WARRANTY AS PER PART MANUFACTURER POLICY.<br>
-                        2. WE ARE NOT RESPONSIBLE FOR ANY LOSS DUE TO ACCIDENT OR FIRE.<br>
+                        2. WE ARE NOT RESPONSIBLE FOR ANY LOSS DUE TO ACCIDENT OR FIRE DURING REPAIR.<br>
                         3. VEHICLE WILL BE DELIVERED ONLY AFTER FULL PAYMENT.<br>
                         4. GOODS ONCE SOLD ARE NOT RETURNABLE.
                     </div>
-                    <h3 style="text-align:center; margin-top:35px">*** THANK YOU - VISIT AGAIN ***</h3>
-                    <div style="margin-top:70px; display:flex; justify-content:space-between"><span style="border-top:2px solid #000; width:200px; text-align:center">CUSTOMER SIGN</span><span style="border-top:2px solid #000; width:200px; text-align:center">FOR MAA TARA GARAGE</span></div>
-                    <p style="text-align:center; font-size:10px; margin-top:15px">--- ${copy} ---</p>
+                    <h3 style="text-align:center; margin-top:35px; letter-spacing:4px; font-style:italic;">*** THANK YOU - VISIT AGAIN ***</h3>
+                    <div style="margin-top:70px; display:flex; justify-content:space-between">
+                        <span style="border-top:2px solid #000; width:220px; text-align:center; padding-top:8px; font-weight:bold">CUSTOMER SIGNATURE</span>
+                        <span style="border-top:2px solid #000; width:220px; text-align:center; padding-top:8px; font-weight:bold">FOR MAA TARA GARAGE</span>
+                    </div>
+                    <p style="text-align:center; font-size:10px; margin-top:20px; color:#666; font-weight:bold;">--- ${copy} ---</p>
                 </div>`;
 
             document.getElementById('printArea').innerHTML = html("CUSTOMER COPY") + html("OFFICE COPY");
