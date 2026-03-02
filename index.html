@@ -3,211 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAA TARA GARAGE - Smart Billing</title>
+    <title>MAA TARA GARAGE - Professional Billing System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
-                        url('https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover; background-attachment: fixed;
-        }
+        body { font-family: 'Roboto', sans-serif; background: #0f172a; color: white; }
         .header-font { font-family: 'Orbitron', sans-serif; }
+        input, select { text-transform: uppercase; background: #1e293b; color: white; border-radius: 8px; padding: 10px; outline: none; border: 1px solid #334155; }
+        input:focus { border-color: #eab308; }
         @media print {
             .no-print { display: none; }
-            body { background: white !important; color: black !important; }
-            .print-page { border: 2px solid #000; padding: 30px; margin-bottom: 20px; page-break-after: always; text-transform: uppercase; }
-            .highlight-box { background-color: #f3f4f6 !important; border: 1.5px solid #000 !important; font-weight: bold; padding: 2px 8px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid black !important; padding: 6px; }
+            body { background: white !important; color: black !important; padding: 0; }
+            .print-page { border: 2px solid #000; padding: 25px; margin-bottom: 20px; page-break-after: always; text-transform: uppercase; color: black; }
+            .highlight-box { background-color: #f1f5f9 !important; border: 1.5px solid #000 !important; font-weight: bold; padding: 4px 8px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; color: black; }
+            th, td { border: 1px solid black !important; padding: 8px; }
+            th { background: #eeeeee !important; }
         }
-        input, select { text-transform: uppercase; }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen pb-10">
+<body class="min-h-screen">
 
-    <div id="lockScreen" class="flex items-center justify-center h-screen px-4">
-        <div class="bg-slate-900/95 p-8 rounded-3xl shadow-2xl w-full max-w-md border border-yellow-500/50 text-center">
-            <h1 class="header-font text-4xl font-bold mb-4 text-yellow-500">MAA TARA GARAGE</h1>
-            <input type="password" id="passInput" placeholder="ENTER PASSWORD" class="w-full p-4 bg-slate-800 rounded-xl mb-6 text-center text-xl text-white outline-none border-b-2 border-yellow-500">
-            <button onclick="checkLogin()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl shadow-lg uppercase">Unlock System</button>
+    <div id="lockScreen" class="flex items-center justify-center h-screen px-4 no-print">
+        <div class="bg-slate-900 p-8 rounded-3xl shadow-2xl w-full max-w-md border border-yellow-500/50 text-center">
+            <h1 class="header-font text-3xl font-bold mb-4 text-yellow-500">MAA TARA GARAGE</h1>
+            <p class="text-xs text-gray-400 mb-6 tracking-widest">SECURE ACCESS</p>
+            <input type="password" id="passInput" placeholder="ENTER PASSWORD" class="w-full p-4 mb-6 text-center text-xl font-bold border-b-2 border-yellow-500">
+            <button onclick="checkLogin()" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl uppercase hover:bg-yellow-600 transition-all shadow-lg">Unlock System</button>
         </div>
     </div>
 
     <div id="mainApp" class="hidden p-4 lg:p-8 max-w-6xl mx-auto no-print">
-        <div class="bg-slate-900/80 p-6 rounded-3xl border-b-4 border-yellow-500 mb-6 flex justify-between items-center shadow-xl">
+        <header class="bg-slate-800 p-6 rounded-3xl border-b-4 border-yellow-500 mb-6 flex justify-between items-center shadow-xl">
             <div>
                 <h2 class="header-font text-2xl font-bold text-yellow-500">MAA TARA GARAGE</h2>
                 <p class="text-xs text-gray-400">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p>
             </div>
             <div class="flex gap-3">
-                <button onclick="showHistory()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm">VIEW HISTORY</button>
-                <button onclick="location.reload()" class="bg-red-600 px-4 py-2 rounded-lg font-bold text-sm">LOGOUT</button>
+                <button onclick="showHistory()" class="bg-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-all">HISTORY</button>
+                <button onclick="location.reload()" class="bg-red-600 px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-all">LOGOUT</button>
+            </div>
+        </header>
+
+        <div class="bg-slate-800/50 p-6 rounded-3xl mb-6 shadow-lg border border-white/5">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] text-yellow-500 font-bold ml-1">DOCUMENT TYPE</label>
+                    <select id="billType" class="border-yellow-500 text-yellow-500 font-bold">
+                        <option value="QUOTATION / JOB CARD">QUOTATION (1 Month Save)</option>
+                        <option value=" ">FINAL BILL (1 Year Save)</option>
+                    </select>
+                </div>
+                <input type="text" id="regNo" placeholder="VEHICLE NO" class="font-bold text-yellow-400">
+                <input type="text" id="owner" placeholder="OWNER NAME">
+                <input type="date" id="date">
+                <select id="model">
+                    <option>TATA MOTORS</option><option>ASHOK LEYLAND</option><option>BHARAT BENZ</option><option>EICHER MOTORS</option><option>MAHINDRA</option>
+                </select>
+                <select id="wheels">
+                    <option>6 CHAKKA</option><option>10 CHAKKA</option><option>12 CHAKKA</option><option>14 CHAKKA</option><option>16 CHAKKA</option><option>18 CHAKKA</option><option>22 CHAKKA</option>
+                </select>
+                <input type="text" id="driver" placeholder="DRIVER NAME">
+                <input type="text" id="mechanic" placeholder="MECHANIC NAME">
             </div>
         </div>
 
-        <div class="bg-slate-900/60 p-6 rounded-3xl mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <select id="billType" class="bg-slate-800 p-3 rounded-xl border border-yellow-500 text-yellow-500 font-bold">
-                <option value="QUOTATION / JOB CARD">QUOTATION (1 Month Save)</option>
-                <option value="FINAL BILL">FINAL BILL (1 Year Save)</option>
-            </select>
-            <input type="text" id="regNo" placeholder="VEHICLE NO" class="p-3 bg-slate-800 rounded-xl font-bold text-yellow-400">
-            <input type="text" id="owner" placeholder="OWNER NAME" class="p-3 bg-slate-800 rounded-xl">
-            <input type="date" id="date" class="p-3 bg-slate-800 rounded-xl">
-            <select id="model" class="p-3 bg-slate-800 rounded-xl">
-                <option>TATA MOTORS</option><option>ASHOK LEYLAND</option><option>BHARAT BENZ</option><option>EICHER</option>
-            </select>
-            <select id="wheels" class="p-3 bg-slate-800 rounded-xl">
-                <option>6 WHEEL</option><option>10 WHEEL</option><option>12 WHEEL</option><option>22 WHEEL</option>
-            </select>
-            <input type="text" id="driver" placeholder="DRIVER" class="p-3 bg-slate-800 rounded-xl">
-            <input type="text" id="mechanic" placeholder="MECHANIC" class="p-3 bg-slate-800 rounded-xl">
-        </div>
-
-        <div class="bg-slate-900/60 p-6 rounded-3xl shadow-xl">
+        <div class="bg-slate-800/50 p-6 rounded-3xl shadow-xl border border-white/5">
             <table class="w-full text-left mb-4">
-                <thead class="text-yellow-500 uppercase text-sm">
-                    <tr><th class="p-2">SN</th><th>WORK DESCRIPTION</th><th class="w-20">QTY</th><th class="w-28 text-right">RATE</th></tr>
+                <thead class="text-yellow-500 border-b border-white/10">
+                    <tr><th class="p-4">SN</th><th>WORK DESCRIPTION</th><th class="w-24 text-center">QTY</th><th class="w-32 text-right">RATE</th><th class="w-32 text-right">AMOUNT</th></tr>
                 </thead>
                 <tbody id="workBody">
-                    <tr>
-                        <td class="p-2">1</td>
-                        <td><input type="text" class="w-full bg-slate-800 p-2 rounded work-desc"></td>
-                        <td><input type="number" class="w-full bg-slate-800 p-2 rounded text-center work-qty" value="1" oninput="calc()"></td>
-                        <td><input type="number" class="w-full bg-slate-800 p-2 rounded text-right work-rate" oninput="calc()"></td>
+                    <tr class="border-b border-white/5">
+                        <td class="p-4">1</td>
+                        <td class="p-2"><input type="text" class="w-full work-desc bg-slate-900/50"></td>
+                        <td class="p-2"><input type="number" class="w-full text-center work-qty bg-slate-900/50" value="1" oninput="calc()"></td>
+                        <td class="p-2"><input type="number" class="w-full text-right work-rate bg-slate-900/50" oninput="calc()"></td>
+                        <td class="p-4 text-right font-bold text-yellow-500 row-total">₹0</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="flex justify-between items-center mt-6">
-                <button onclick="addRow()" class="text-yellow-500 font-bold">+ ADD ROW</button>
-                <div class="text-2xl font-bold">TOTAL: ₹<span id="totalVal">0</span></div>
+            <div class="flex justify-between items-center p-4 bg-slate-900/30 rounded-2xl">
+                <button onclick="addRow()" class="bg-yellow-500/10 text-yellow-500 px-6 py-2 rounded-full font-bold border border-yellow-500 hover:bg-yellow-500 hover:text-black transition-all">+ ADD WORK</button>
+                <div class="text-3xl font-black text-yellow-500 uppercase">QUOTATION AMT: ₹<span id="totalVal">0</span></div>
             </div>
-            <button onclick="saveAndPrint()" class="w-full mt-6 bg-green-600 py-4 rounded-2xl font-black text-xl uppercase">SAVE & PRINT BILL</button>
+            <button onclick="saveAndPrint()" class="w-full mt-8 bg-green-600 py-5 rounded-2xl font-black text-2xl uppercase shadow-lg hover:bg-green-700 transition-all">SAVE & PRINT DOCUMENT</button>
         </div>
     </div>
 
-    <div id="historyModal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 w-full max-w-4xl p-6 rounded-3xl border border-yellow-500 max-h-[80vh] overflow-y-auto">
+    <div id="historyModal" class="hidden fixed inset-0 bg-black/95 p-6 z-50 overflow-y-auto no-print">
+        <div class="max-w-4xl mx-auto bg-slate-900 p-8 rounded-3xl border border-yellow-500">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-yellow-500">BILLING HISTORY</h2>
-                <button onclick="closeHistory()" class="text-red-500 text-3xl font-bold">&times;</button>
+                <h2 class="text-2xl font-bold text-yellow-500 header-font">BILLING RECORDS</h2>
+                <button onclick="document.getElementById('historyModal').classList.add('hidden')" class="text-red-500 text-4xl">&times;</button>
             </div>
-            <table class="w-full text-sm text-left">
-                <tr class="text-gray-400 border-b border-gray-700"><th>DATE</th><th>VEHICLE</th><th>TYPE</th><th>TOTAL</th><th>ACTION</th></tr>
-                <tbody id="historyBody"></tbody>
-            </table>
+            <div id="historyList" class="space-y-4 text-white"></div>
         </div>
     </div>
 
     <div id="printArea" class="hidden"></div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyCyrPOh29VKzPCXGPtyGbkHXGlJOIqx69E", authDomain: "fir-logistics-85794.firebaseapp.com", projectId: "fir-logistics-85794", storageBucket: "fir-logistics-85794.firebasestorage.app", messagingSenderId: "689254184022", appId: "1:689254184022:web:b3a4af5219dcff9b74f7f7" };
+        // CONFIGURATION
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAvR17FZtEaRPT1_xlHSGB6lc0tCTuwVSM", 
+            authDomain: "maa-tara-garage.firebaseapp.com", 
+            projectId: "maa-tara-garage", 
+            storageBucket: "maa-tara-garage.appspot.com", 
+            messagingSenderId: "689254184022", 
+            appId: "1:689254184022:web:b3a4af5219dcff9b74f7f7" 
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // LOGIN WITH YOUR NEW PASSWORD
         function checkLogin() {
             if(document.getElementById('passInput').value === "Bapi@0520") {
                 document.getElementById('lockScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
-                runCleanup(); // Auto delete purane bills
+                cleanupOldBills();
             } else { alert("WRONG PASSWORD!"); }
         }
 
         function addRow() {
-            let body = document.getElementById('workBody');
-            let row = body.insertRow();
-            row.innerHTML = `<td class="p-2">${body.rows.length}</td><td><input type="text" class="w-full bg-slate-800 p-2 rounded work-desc"></td><td><input type="number" class="w-full bg-slate-800 p-2 rounded text-center work-qty" value="1" oninput="calc()"></td><td><input type="number" class="w-full bg-slate-800 p-2 rounded text-right work-rate" oninput="calc()"></td>`;
+            let b = document.getElementById('workBody');
+            let r = b.insertRow();
+            r.className = "border-b border-white/5";
+            r.innerHTML = `<td class="p-4">${b.rows.length}</td><td class="p-2"><input type="text" class="w-full work-desc bg-slate-900/50"></td><td class="p-2"><input type="number" class="w-full text-center work-qty bg-slate-900/50" value="1" oninput="calc()"></td><td class="p-2"><input type="number" class="w-full text-right work-rate bg-slate-900/50" oninput="calc()"></td><td class="p-4 text-right font-bold text-yellow-500 row-total">₹0</td>`;
         }
 
         function calc() {
-            let total = 0;
-            let rows = document.getElementById('workBody').rows;
-            for(let i=0; i<rows.length; i++){
-                total += (rows[i].querySelector('.work-qty').value * rows[i].querySelector('.work-rate').value) || 0;
-            }
-            document.getElementById('totalVal').innerText = total;
+            let t = 0;
+            document.querySelectorAll('#workBody tr').forEach(row => {
+                let q = row.querySelector('.work-qty').value || 0;
+                let r = row.querySelector('.work-rate').value || 0;
+                let amt = q * r;
+                row.querySelector('.row-total').innerText = "₹" + amt;
+                t += amt;
+            });
+            document.getElementById('totalVal').innerText = t;
         }
 
         async function saveAndPrint() {
-            const billData = {
-                type: document.getElementById('billType').value,
-                regNo: document.getElementById('regNo').value,
+            const bType = document.getElementById('billType').value;
+            const data = {
+                reg: document.getElementById('regNo').value,
                 owner: document.getElementById('owner').value,
                 date: document.getElementById('date').value,
                 total: document.getElementById('totalVal').innerText,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                expiryDate: calculateExpiry(document.getElementById('billType').value)
+                type: bType,
+                expiry: Date.now() + (bType.includes("QUOTATION") ? 30*24*60*60*1000 : 365*24*60*60*1000)
             };
-
-            if(!billData.regNo || !billData.date) return alert("Pehle Date aur Vehicle No bhariye!");
-
-            await db.collection("bills").add(billData);
-            generateInvoice(billData);
-        }
-
-        function calculateExpiry(type) {
-            let d = new Date();
-            if(type === "FINAL BILL") d.setFullYear(d.getFullYear() + 1);
-            else d.setMonth(d.getMonth() + 1);
-            return d.getTime();
-        }
-
-        async function runCleanup() {
-            const now = new Date().getTime();
-            const snapshot = await db.collection("bills").where("expiryDate", "<=", now).get();
-            snapshot.forEach(doc => doc.ref.delete());
-            console.log("Purane bills saaf kar diye gaye.");
+            if(!data.reg || !data.date) return alert("Pehle Date aur Vehicle No bhariye!");
+            await db.collection("garage_records").add(data);
+            printBill(data);
         }
 
         async function showHistory() {
             document.getElementById('historyModal').classList.remove('hidden');
-            const snapshot = await db.collection("bills").orderBy("timestamp", "desc").limit(50).get();
-            let html = "";
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                html += `<tr class="border-b border-gray-800"><td class="py-3">${data.date}</td><td>${data.regNo}</td><td>${data.type}</td><td>₹${data.total}</td><td><button onclick="rePrint('${doc.id}')" class="text-yellow-500">PRINT</button></td></tr>`;
+            const snap = await db.collection("garage_records").orderBy("date", "desc").limit(30).get();
+            let h = "";
+            snap.forEach(doc => {
+                let d = doc.data();
+                h += `<div class="p-4 bg-slate-800 rounded-xl flex justify-between border border-white/5"><span>${d.date} | ${d.reg} | ${d.type || 'BILL'}</span><span class="font-bold text-green-400">₹${d.total}</span></div>`;
             });
-            document.getElementById('historyBody').innerHTML = html;
+            document.getElementById('historyList').innerHTML = h || "No Records Found";
         }
 
-        function closeHistory() { document.getElementById('historyModal').classList.add('hidden'); }
+        async function cleanupOldBills() {
+            const now = Date.now();
+            const snap = await db.collection("garage_records").where("expiry", "<=", now).get();
+            snap.forEach(doc => doc.ref.delete());
+        }
 
-        function generateInvoice(data) {
-            let rows = "";
-            let bodyRows = document.getElementById('workBody').rows;
-            for(let i=0; i<bodyRows.length; i++){
-                let desc = bodyRows[i].querySelector('.work-desc').value;
-                let qty = bodyRows[i].querySelector('.work-qty').value;
-                let rate = bodyRows[i].querySelector('.work-rate').value;
-                if(desc) rows += `<tr><td>${i+1}</td><td>${desc}</td><td style="text-align:center">${qty}</td><td style="text-align:right">₹${rate}</td><td style="text-align:right">₹${qty*rate}</td></tr>`;
-            }
+        function printBill(data) {
+            let items = "";
+            document.querySelectorAll('#workBody tr').forEach((row, i) => {
+                let d = row.querySelector('.work-desc').value;
+                let q = row.querySelector('.work-qty').value;
+                let r = row.querySelector('.work-rate').value;
+                if(d) items += `<tr><td style="text-align:center">${i+1}</td><td>${d}</td><td style="text-align:center">${q}</td><td style="text-align:right">${r}</td><td style="text-align:right">${q*r}</td></tr>`;
+            });
 
-            const page = (copy) => `
+            const html = (copy) => `
                 <div class="print-page">
                     <div style="display:flex; justify-content:space-between">
-                        <div><h1 style="margin:0; font-size:32px; font-family:'Orbitron'">MAA TARA GARAGE</h1><p>PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p></div>
-                        <div style="text-align:right"><div style="border:2px solid #000; padding:10px; font-weight:bold">${data.type === 'FINAL BILL' ? 'INVOICE / BILL' : 'QUOTATION / JOB CARD'}</div><p>DATE: ${data.date}</p></div>
+                        <div><h1 class="header-font" style="font-size:38px; margin:0">MAA TARA GARAGE</h1><p style="font-weight:bold">PARKING NO. 1, TRANSPORT NAGAR, RAIPUR (C.G.)</p></div>
+                        <div style="text-align:right"><div style="border:2px solid #000; padding:10px; font-weight:bold">${data.type}</div><p style="margin-top:10px">DATE: <span class="highlight-box">${data.date}</span></p></div>
                     </div>
                     <table style="width:100%; margin:20px 0">
-                        <tr><td class="highlight-box">VEHICLE: ${data.regNo}</td><td class="highlight-box">OWNER: ${data.owner}</td></tr>
+                        <tr><td class="highlight-box">VEHICLE NO: <span style="font-size:20px">${data.reg}</span></td><td class="highlight-box">OWNER: ${data.owner}</td></tr>
                     </table>
-                    <table style="width:100%; border-collapse:collapse">
-                        <thead><tr style="background:#eee"><th>SN</th><th>WORK DESCRIPTION</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead>
-                        <tbody>${rows}</tbody>
-                        <tfoot><tr><th colspan="4" style="text-align:right; padding:15px">QUOTATION AMOUNT:</th><th style="font-size:20px" class="highlight-box">₹${data.total}</th></tr></tfoot>
+                    <table>
+                        <thead><tr><th style="width:40px">SN</th><th>DESCRIPTION OF REPAIR WORK</th><th style="width:60px">QTY</th><th style="width:100px">RATE</th><th style="width:120px">AMOUNT</th></tr></thead>
+                        <tbody>${items}</tbody>
+                        <tfoot><tr><th colspan="4" style="text-align:right; padding:15px; font-size:16px">QUOTATION AMOUNT:</th><th style="font-size:24px" class="highlight-box">₹${data.total}</th></tr></tfoot>
                     </table>
-                    <div style="margin-top:20px; font-size:11px">
-                        <b>TERMS:</b><br>1. GOODS SOLD NOT RETURNABLE.<br>2. NOT RESPONSIBLE FOR FIRE/ACCIDENT.<br>3. DELIVERY AFTER FULL PAYMENT.
+                    <div style="margin-top:20px; font-size:12px">
+                        <b>TERMS & CONDITIONS:</b><br>
+                        1. WORK CARRIES WARRANTY AS PER PART MANUFACTURER POLICY.<br>
+                        2. WE ARE NOT RESPONSIBLE FOR ANY LOSS DUE TO ACCIDENT OR FIRE.<br>
+                        3. VEHICLE WILL BE DELIVERED ONLY AFTER FULL PAYMENT.<br>
+                        4. GOODS ONCE SOLD ARE NOT RETURNABLE.
                     </div>
-                    <div style="margin-top:50px; display:flex; justify-content:space-between"><p>CUSTOMER SIGN</p><p>FOR MAA TARA GARAGE</p></div>
-                    <p style="text-align:center; font-size:10px; margin-top:10px">--- ${copy} ---</p>
+                    <h3 style="text-align:center; margin-top:35px">*** THANK YOU - VISIT AGAIN ***</h3>
+                    <div style="margin-top:70px; display:flex; justify-content:space-between"><span style="border-top:2px solid #000; width:200px; text-align:center">CUSTOMER SIGN</span><span style="border-top:2px solid #000; width:200px; text-align:center">FOR MAA TARA GARAGE</span></div>
+                    <p style="text-align:center; font-size:10px; margin-top:15px">--- ${copy} ---</p>
                 </div>`;
-            
-            document.getElementById('printArea').innerHTML = page("CUSTOMER COPY") + page("OFFICE COPY");
+
+            document.getElementById('printArea').innerHTML = html("CUSTOMER COPY") + html("OFFICE COPY");
             document.getElementById('printArea').classList.remove('hidden');
             window.print();
         }
